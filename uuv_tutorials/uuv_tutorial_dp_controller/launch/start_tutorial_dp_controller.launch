@@ -9,6 +9,7 @@
     <arg name="uuv_name"/>
     <!-- Name of the vehicle model: the name of the robot model -->
     <arg name="model_name" default="$(arg uuv_name)"/>
+    <arg name="control_pkg" value="$(arg uuv_name)_control"/>
 
     <!-- Control effort saturation -->
     <arg name="saturation" default="5000"/>
@@ -23,9 +24,14 @@
     <arg name="Kd" default="9077.459,9077.459,9077.459,18880.925,18880.925,18880.925"/>
     <arg name="Ki" default="321.417,321.417,321.417,2096.951,2096.951,2096.951"/>
 
-    <arg name="output_dir" default="$(find uuv_thruster_manager)/config/$(arg model_name)"/>
-    <arg name="config_file" default="$(find uuv_thruster_manager)/config/$(arg model_name)/thruster_manager.yaml"/>
-    <arg name="tam_file" default="$(find uuv_thruster_manager)/config/$(arg model_name)/TAM.yaml"/>
+    <!-- <arg name="output_dir" default="$(find uuv_thruster_manager)/config/$(arg model_name)"/>
+    <arg name="config_file" default="$(find uuv_thruster_manager)/config/$(arg model_name)/thruster_manager.yaml"/> -->
+    <!-- <arg name="tam_file" default="$(find uuv_thruster_manager)/config/$(arg model_name)/TAM.yaml"/> -->
+    <arg name="output_dir" default="$(eval find(arg('control_pkg')) + '/config')" doc="Output directory for the generated thruster manager"/>
+    <arg name="config_file" default="$(eval find(arg('control_pkg')) + '/config/thruster_manager.yaml')" doc="File storing the configuration of the thruster manager"/>
+    <arg name="tam_file" default="$(eval find(arg('control_pkg')) + '/config/TAM.yaml')" doc="File storing the thruster allocation matrix"/>
+
+
     <!--
     For the control vector to be distributed amongst the thrusters, a thruster manager node
     has to be initialized for this specific vehicle. The thruster manager will calculate the
@@ -33,7 +39,9 @@
     in a YAML file beforehand. Check the tutorial on how to initialize the thruster allocation
     matrix.
     -->
-    <include file="$(find uuv_thruster_manager)/launch/thruster_manager.launch">
+    <!-- <include file="$(find uuv_thruster_manager)/launch/thruster_manager.launch"> -->
+    <include file="$(eval find(arg('control_pkg')) + '/launch/start_thruster_manager.launch')">
+
         <!--
         The thruster manager will use the namespace uuv_name to initialize the node and
         will use the robot's model_name to search for the YAML file containing the thruster

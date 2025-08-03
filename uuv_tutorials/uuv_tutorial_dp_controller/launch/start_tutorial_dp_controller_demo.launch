@@ -1,12 +1,17 @@
 <launch>
     <!-- If you want to generate a ROS bag with the recorded simulated data, set this flag to true -->
-    <arg name="record" default="false"/>
+    <arg name="record" default="false"/> 
+    <arg name="uuv_name" default="barracuda"/>
+    <arg name="description_pkg" value="$(arg uuv_name)_description"/>
+    <arg name="upload_file" value="upload_$(arg uuv_name).launch"/>
 
     <!-- Start the a underwater world simulation scenario -->    
     <include file="$(find uuv_gazebo_worlds)/launch/ocean_waves.launch"/>
 
     <!-- Add the RexROV vehicle to the simulation (namespace: rexrov) -->
-    <include file="$(find uuv_descriptions)/launch/upload_rexrov.launch">
+    <!-- <include file="$(find uuv_descriptions)/launch/upload_rexrov.launch"> -->
+    <!-- <include file="$(find barracuda_description)/launch/upload_barracuda.launch"> -->
+    <include file="$(eval find(arg('description_pkg')) + '/launch/' + arg('upload_file'))">
         <arg name="x" default="20"/>
         <arg name="y" default="0"/>
         <arg name="z" default="-20"/>
@@ -15,8 +20,10 @@
 
     <!-- Start the controller -->
     <include file="$(find uuv_tutorial_dp_controller)/launch/start_tutorial_dp_controller.launch">
-        <arg name="uuv_name" value="rexrov"/>
-        <arg name="model_name" value="rexrov"/>
+        <!-- <arg name="uuv_name" value="rexrov"/>
+        <arg name="model_name" value="rexrov"/> -->
+        <arg name="uuv_name" default="$(arg uuv_name)"/>
+        <arg name="model_name" default="$(arg uuv_name)"/>
     </include>
 
     <!-- Start the recording node  -->
