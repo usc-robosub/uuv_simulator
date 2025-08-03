@@ -3,6 +3,7 @@
     <arg name="record" default="false"/> 
     <arg name="uuv_name" default="barracuda"/>
     <arg name="description_pkg" value="$(arg uuv_name)_description"/>
+    <arg name="control_pkg" value="$(arg uuv_name)_control"/>
     <arg name="upload_file" value="upload_$(arg uuv_name).launch"/>
 
     <!-- Start the a underwater world simulation scenario -->    
@@ -32,8 +33,8 @@
     </include>
 
     <!-- Open RViz for visualization of sensor data and visualization markers -->
-    <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find uuv_gazebo)/rviz/controller_demo.rviz"/>
-
+    <node name="rviz" pkg="rviz" type="rviz" output="screen" args="$(eval '-d ' + find(arg('control_pkg')) + '/rviz/' + arg('control_pkg') + '.rviz')"/>
+    
 
     <!--
     You can run this demo as
